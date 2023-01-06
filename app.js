@@ -3,6 +3,7 @@ const app = express();
 const path = require("path");
 const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
+app.use(express.json());
 
 const dbPath = path.join(__dirname, "todoApplication.db");
 let database = null;
@@ -21,6 +22,7 @@ const initializeDB = async () => {
 initializeDB();
 
 //AP1
+
 const hasPriorityAndStatusProperties = (requestQuery) => {
   return (
     requestQuery.priority !== undefined && requestQuery.status !== undefined
@@ -164,12 +166,11 @@ app.put("/todos/:todoId/", async (request, response) => {
 app.delete("/todos/:todoId/", async (request, response) => {
   const { todoId } = request.params;
   const removeTodoQuery = `
-  SELECT 
-  *
-  FROM 
-  todo
+  
+  DELETE FROM 
+    todo
   WHERE
-  id = ${todoId}`;
+    id = ${todoId}`;
 
   await database.run(removeTodoQuery);
   response.send("Todo Deleted");
